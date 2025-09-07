@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS flash_sales (
+  id SERIAL PRIMARY KEY,
+  started_at TIMESTAMPTZ,
+  ended_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
