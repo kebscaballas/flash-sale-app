@@ -11,10 +11,10 @@ import type {
 
 @Injectable()
 export abstract class ApplicationRepository<T extends ApplicationEntity> {
-  private readonly entity: EntityTarget<ApplicationEntity>;
+  private readonly entity: EntityTarget<T>;
   private readonly dataSource: DataSource;
 
-  constructor(entity: EntityTarget<ApplicationEntity>, dataSource: DataSource) {
+  constructor(entity: EntityTarget<T>, dataSource: DataSource) {
     this.entity = entity;
     this.dataSource = dataSource;
   }
@@ -37,19 +37,21 @@ export abstract class ApplicationRepository<T extends ApplicationEntity> {
   async create(
     data: DeepPartial<T>[],
     entityManager?: EntityManager,
-  ): Promise<ApplicationEntity[]>;
+  ): Promise<T[]>;
+  async create(data: DeepPartial<T>, entityManager?: EntityManager): Promise<T>;
   async create(
-    data: DeepPartial<T>,
-    entityManager?: EntityManager,
-  ): Promise<ApplicationEntity>;
-  async create(
-    data: DeepPartial<ApplicationEntity> | DeepPartial<ApplicationEntity>[],
+    data: DeepPartial<T> | DeepPartial<T>[],
     entityManager?: EntityManager,
   ) {
+    const persistence = this.persistence(entityManager);
     if (Array.isArray(data)) {
-      return this.persistence(entityManager).save(data);
+      const entities = persistence.create(data);
+
+      return persistence.save(entities);
     } else {
-      return this.persistence(entityManager).save(data);
+      const entity = persistence.create(data);
+
+      return persistence.save(entity);
     }
   }
 }
