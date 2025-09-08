@@ -5,6 +5,7 @@ import type {
   DeepPartial,
   EntityManager,
   EntityTarget,
+  FindOptionsWhere,
   ObjectLiteral,
   Repository,
 } from 'typeorm';
@@ -32,6 +33,12 @@ export abstract class ApplicationRepository<T extends ApplicationEntity> {
 
   protected persistence(entityManager?: EntityManager) {
     return this.getRepository(this.entity, entityManager);
+  }
+
+  async query(query: DeepPartial<T>, entityManager?: EntityManager) {
+    return this.persistence(entityManager).find({
+      where: query as FindOptionsWhere<T>,
+    });
   }
 
   async create(

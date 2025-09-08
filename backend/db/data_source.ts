@@ -1,5 +1,6 @@
-import FlashSaleEntity from 'src/entities/flash_sale_entity';
 import { DataSource } from 'typeorm';
+import FlashSaleEntity from 'src/entities/flash_sale_entity';
+import PaymentEntity from 'src/entities/payment_entity';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -8,5 +9,5 @@ export const AppDataSource = new DataSource({
   username: 'postgres',
   password: 'postgres',
   database: 'app',
-  entities: [FlashSaleEntity],
+  entities: [FlashSaleEntity, PaymentEntity],
 });
