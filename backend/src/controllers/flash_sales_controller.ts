@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import CreateFlashSalePayload from 'src/payloads/flash_sale/create_flash_sale_payload';
 import { FlashSaleService } from 'src/services/flash_sale_service';
 
@@ -9,6 +9,13 @@ export class FlashSalesController {
   @Post()
   async create(@Body() dto: CreateFlashSalePayload) {
     const response = await this.flashSaleService.create(dto);
+
+    return response;
+  }
+
+  @Get('/nearest')
+  async getNearest() {
+    const response = await this.flashSaleService.getNearest();
 
     return response;
   }
