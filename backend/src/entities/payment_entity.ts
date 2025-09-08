@@ -9,6 +9,6 @@ export default class PaymentEntity extends ApplicationEntity {
   @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
-  @Column({ type: 'varchar', nullable: false })
-  product_id: string;
+  @Column({ type: 'integer', nullable: false })
+  product_id: number;
 }

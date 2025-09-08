@@ -16,7 +16,7 @@ export class FlashSaleService {
     if (!activeFlashSale) {
       throw new NotFoundException({
         statusCode: 404,
-        detail: 'no active flash sales found',
+        detail: 'no flash sales found',
       });
     }
 
