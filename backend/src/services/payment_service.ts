@@ -28,7 +28,7 @@ export class PaymentService {
     } else if (product.stock === 0) {
       throw new BadRequestException({
         statusCode: 400,
-        detail: `the product is already sold out`,
+        detail: `The product is already sold out.`,
       });
     }
 
@@ -37,7 +37,7 @@ export class PaymentService {
     if (!flashSale || flashSale.status !== 'active') {
       throw new BadRequestException({
         statusCode: 400,
-        detail: 'there are no flash sales running at the moment',
+        detail: 'There are no flash sales running at the moment.',
       });
     }
 
@@ -48,7 +48,7 @@ export class PaymentService {
     if (existingPayment.length > 0) {
       throw new BadRequestException({
         statusCode: 400,
-        detail: 'a purchase has already been made by this email',
+        detail: 'A purchase has already been made by this email.',
       });
     }
 

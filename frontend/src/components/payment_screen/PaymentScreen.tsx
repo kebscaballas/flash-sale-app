@@ -37,8 +37,6 @@ const PaymentScreen = () => {
 
       await createPayment(payload);
 
-      await getProduct();
-
       setShowSuccessfulPaymentOverlay(true);
     } catch (e: unknown) {
       if (e && typeof e === 'object') {
@@ -55,6 +53,11 @@ const PaymentScreen = () => {
         console.log(e);
       }
     } finally {
+      await Promise.all([
+        getProduct(),
+        getLatestFlashSale()
+      ]);
+
       setCreatingPayment(false);
     }
   };
@@ -78,9 +81,7 @@ const PaymentScreen = () => {
   const onCloseOverlay = useCallback(async () => {
     setShowSuccessfulPaymentOverlay(false);
     setEmail('')
-
-    await getLatestFlashSale()
-  }, [getLatestFlashSale])
+  }, [])
 
   const paymentExists = Array.isArray(payment) && payment.length > 0
 
