@@ -20,7 +20,7 @@ const usePayments = () => {
         addQueryPrefix: true,
       });
 
-      const response = await fetch(`http://localhost:3000/api/payments${queryParams}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/payments${queryParams}`, {
         method: 'GET'
       })
 
@@ -47,7 +47,7 @@ const usePayments = () => {
     try {
       setFetchStatus('loading');
 
-      const response = await fetch('http://localhost:3000/api/payments', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/payments`, {
         headers: {
           'Content-Type': 'application/json',
         },

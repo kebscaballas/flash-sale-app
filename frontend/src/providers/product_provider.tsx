@@ -13,7 +13,7 @@ const ProductProvider = ({ children }: ProductProviderProps) => {
     try {
       setFetchStatus('loading');
 
-      const response = await fetch(`http://localhost:3000/api/products`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products`, {
         method: 'GET'
       })
 
