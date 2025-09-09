@@ -1,7 +1,6 @@
 {
   "name": "backend",
   "version": "0.0.1",
-  "description": "",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -42,9 +41,11 @@
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
     "@types/js-yaml": "^4.0.9",
+    "@types/k6": "^1.2.0",
     "@types/node": "^22.10.7",
     "@types/pg": "^8.15.5",
     "@types/supertest": "^6.0.2",
+    "esbuild": "^0.25.9",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
@@ -77,5 +78,11 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [],
+  "description": ""
 }
