@@ -57,11 +57,11 @@ export class PaymentService {
       amount: product.amount,
     };
 
-    const newPayment = await this.paymentRepository.create(data);
-
     await this.productRepository.update({
       stock: product.stock - 1,
     });
+
+    const newPayment = await this.paymentRepository.create(data);
 
     return newPayment;
   }
