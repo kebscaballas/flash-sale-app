@@ -14,7 +14,7 @@ const PaymentScreen = () => {
   const [showSuccessfulPaymentOverlay, setShowSuccessfulPaymentOverlay] = useState(false);
 
   const { payment, createPayment, getPaymentByEmail } = usePayments();
-  const { getLatestFlashSale } = useFlashSales();
+  const { getLatestFlashSale, fetchStatus: flashSaleFetchStatus } = useFlashSales();
   const { getProduct, product, fetchStatus: productFetchStatus } = useProducts();
 
   const clearError = () => {
@@ -52,12 +52,12 @@ const PaymentScreen = () => {
       } else {
         console.log(e);
       }
-    } finally {
+
       await Promise.all([
         getProduct(),
         getLatestFlashSale()
       ]);
-
+    } finally {
       setCreatingPayment(false);
     }
   };
@@ -81,7 +81,12 @@ const PaymentScreen = () => {
   const onCloseOverlay = useCallback(async () => {
     setShowSuccessfulPaymentOverlay(false);
     setEmail('')
-  }, [])
+
+    await Promise.all([
+      getProduct(),
+      getLatestFlashSale()
+    ]);
+  }, [getLatestFlashSale, getProduct])
 
   const paymentExists = Array.isArray(payment) && payment.length > 0
 
@@ -95,7 +100,16 @@ const PaymentScreen = () => {
         {productFetchStatus === 'loading' && !product && (
           <p>Loading...</p>
         )}
-        {product && (
+        {(
+          productFetchStatus === 'error' ||
+          flashSaleFetchStatus === 'error'
+        ) && (
+          <>
+            <p className="error-smiley">X(</p>
+            <p className="unexpected-error">Something went wrong. Please try again later.</p>
+          </>
+        )}
+        {productFetchStatus !== 'error' && product && (
           <div>      
             <div className="product-section">
               <img className="product-image" src={product.image_url} />
@@ -134,9 +148,6 @@ const PaymentScreen = () => {
               </div>
             </div>
           </div>
-        )}
-        {productFetchStatus === 'error' && (
-          <p>No product data available.</p>
         )}
       </div>
       {showSuccessfulPaymentOverlay && <SuccessfulPaymentOverlay onClose={onCloseOverlay} />}

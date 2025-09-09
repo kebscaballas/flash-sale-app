@@ -105,3 +105,14 @@
   color: #d4d4d4;
   cursor: not-allowed;
 }
+
+.error-smiley {
+  font-size: 5rem;
+  color: #d48115;
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+
+.unexpected-error {
+  text-align: center;
+}

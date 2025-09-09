@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ProductContext from '../contexts/product_context';
+import ApiClient from '../lib/api_client';
 
 type ProductProviderProps = {
   children: React.ReactNode;
@@ -9,30 +10,24 @@ const ProductProvider = ({ children }: ProductProviderProps) => {
   const [product, setProduct] = useState(null);
   const [fetchStatus, setFetchStatus] = useState('loading');
 
-  const getProduct = async () => {
+  const apiClient = useMemo(() => new ApiClient(), []);
+
+  const getProduct = useCallback(async () => {
     try {
       setFetchStatus('loading');
 
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products`, {
-        method: 'GET'
-      })
+      const response = await apiClient.get(`/api/products`);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw data;
-      }
-
-      setProduct(data);
+      setProduct(response);
       setFetchStatus('success');
 
-      return data;
+      return response;
     } catch (e: unknown) {
       setFetchStatus('error')
 
       throw e;
     }
-  };
+  }, [apiClient]);
 
   useEffect(() => {
     if (!product) {
@@ -44,7 +39,7 @@ const ProductProvider = ({ children }: ProductProviderProps) => {
       
       initializeProduct();
     }
-  }, [product])
+  }, [product, getProduct])
 
   return <ProductContext.Provider value={{ fetchStatus, getProduct, product, }}>
     {children}
