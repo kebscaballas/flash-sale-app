@@ -85,6 +85,10 @@ const PaymentScreen = () => {
 
   const paymentExists = Array.isArray(payment) && payment.length > 0
 
+  const formattedAmount = product?.amount ?
+    Intl.NumberFormat('en-PH').format(parseFloat(product.amount)) :
+    '';
+
   return (
     <>
       <div className="payment-screen">
@@ -96,7 +100,7 @@ const PaymentScreen = () => {
             <div className="product-section">
               <img className="product-image" src={product.image_url} />
               <p className="product-name">{product.name}</p>
-              <p className="product-amount">₱ {product.amount}</p>
+              <p className="product-amount">₱ {formattedAmount}</p>
               {product.stock <= 10 && (
                 <p className="product-low-stock-alert">
                   <span style={{ fontWeight: 600 }}>{product.stock} left.</span> {' '}
