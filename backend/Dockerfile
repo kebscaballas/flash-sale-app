@@ -13,4 +13,4 @@ ENV WATCHPACK_POLLING=true
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 EXPOSE 3000
-CMD ["pnpm", "start:dev"]
+CMD ["npm", "start:dev"]

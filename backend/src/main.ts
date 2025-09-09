@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './modules/application_module';
 import {
@@ -8,6 +9,7 @@ import {
 import { ValidationError } from 'class-validator';
 
 async function bootstrap() {
+  dotenv.config();
   const app = await NestFactory.create(AppModule);
   const origins = process.env.CORS_ORIGIN?.split(',').map((origin) =>
     origin.trim(),
