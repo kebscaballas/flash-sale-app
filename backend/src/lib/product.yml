@@ -2,4 +2,5 @@ product:
   id: 1
   name: "Labubu (Secret Rare)"
   amount: "7107.15"
-  stock: 100
+  image_url: '/assets/labubu.webp'
+  stock: 11

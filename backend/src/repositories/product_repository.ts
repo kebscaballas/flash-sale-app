@@ -7,6 +7,7 @@ import ProductEntity from 'src/entities/product_entity';
 type ProductType = {
   id: number;
   amount: string;
+  image_url: string;
   name: string;
   stock: number;
 };
@@ -31,6 +32,7 @@ export class ProductRepository {
     return new ProductEntity(
       product.id,
       product.amount,
+      product.image_url,
       product.name,
       product.stock,
     );
