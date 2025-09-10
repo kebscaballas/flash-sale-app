@@ -26,6 +26,21 @@ services:
     depends_on:
       - db
 
+  
+  api-test:
+    build:
+      context: ./backend
+      target: dev
+    working_dir: /app
+    command: sh -lc "npm test"
+    environment:
+      NODE_ENV: test
+      TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
+    volumes:
+      - ./backend:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+    user: root
+
   db:
     image: postgres:17-alpine
     ports: ["5432:5432"]

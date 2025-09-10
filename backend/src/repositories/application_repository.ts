@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ApplicationEntity } from 'src/entities/application_entity';
+import { ApplicationEntity } from '../entities/application_entity';
 import type {
   DataSource,
   DeepPartial,

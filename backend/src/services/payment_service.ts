@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PaymentRepository } from '../repositories/payment_repository';
 import CreatePaymentPayload from '../payloads/payment/create_payment_payload';
-import ListPaymentsPayload from 'src/payloads/payment/list_payments_payload';
-import { ProductRepository } from 'src/repositories/product_repository';
-import { FlashSaleRepository } from 'src/repositories/flash_sale_repository';
+import ListPaymentsPayload from '../payloads/payment/list_payments_payload';
+import { ProductRepository } from '../repositories/product_repository';
+import { FlashSaleRepository } from '../repositories/flash_sale_repository';
 
 @Injectable()
 export class PaymentService {
@@ -18,51 +18,52 @@ export class PaymentService {
   }
 
   async create(dto: CreatePaymentPayload) {
-    const product = await this.productRepository.read();
+    try {
+      const [product, flashSale] = await Promise.all([
+        this.productRepository.read(),
+        this.flashSaleRepository.getNearest(),
+      ]);
 
-    if (product.id !== dto.product_id) {
-      throw new BadRequestException({
-        statusCode: 404,
-        detail: `product with id ${dto.product_id} not found`,
+      if (product.id !== dto.product_id) {
+        throw new BadRequestException({
+          statusCode: 404,
+          detail: `product with id ${dto.product_id} not found`,
+        });
+      } else if (product.stock === 0) {
+        throw new BadRequestException({
+          statusCode: 400,
+          detail: `The product is already sold out.`,
+        });
+      }
+
+      if (!flashSale || flashSale.status !== 'active') {
+        throw new BadRequestException({
+          statusCode: 400,
+          detail: 'There are no flash sales running at the moment.',
+        });
+      }
+
+      const data = {
+        ...dto,
+        amount: product.amount,
+      };
+
+      await this.productRepository.update({
+        stock: product.stock - 1,
       });
-    } else if (product.stock === 0) {
-      throw new BadRequestException({
-        statusCode: 400,
-        detail: `The product is already sold out.`,
-      });
+
+      const newPayment = await this.paymentRepository.create(data);
+
+      return newPayment;
+    } catch (e: unknown) {
+      if (e && typeof e === 'object' && 'code' in e && e.code === '23505') {
+        throw new BadRequestException({
+          statusCode: 400,
+          detail: 'A purchase has already been made by this email.',
+        });
+      } else {
+        throw e;
+      }
     }
-
-    const flashSale = await this.flashSaleRepository.getNearest();
-
-    if (!flashSale || flashSale.status !== 'active') {
-      throw new BadRequestException({
-        statusCode: 400,
-        detail: 'There are no flash sales running at the moment.',
-      });
-    }
-
-    const existingPayment = await this.paymentRepository.query({
-      email: dto.email,
-    });
-
-    if (existingPayment.length > 0) {
-      throw new BadRequestException({
-        statusCode: 400,
-        detail: 'A purchase has already been made by this email.',
-      });
-    }
-
-    const data = {
-      ...dto,
-      amount: product.amount,
-    };
-
-    await this.productRepository.update({
-      stock: product.stock - 1,
-    });
-
-    const newPayment = await this.paymentRepository.create(data);
-
-    return newPayment;
   }
 }

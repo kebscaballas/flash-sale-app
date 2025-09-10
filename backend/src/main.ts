@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './modules/application_module';
+import { ApplicationModule } from './modules/application_module';
 import {
   BadRequestException,
   ClassSerializerInterceptor,
@@ -10,7 +10,7 @@ import { ValidationError } from 'class-validator';
 
 async function bootstrap() {
   dotenv.config();
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(ApplicationModule);
   const origins = process.env.CORS_ORIGIN?.split(',').map((origin) =>
     origin.trim(),
   );

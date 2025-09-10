@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import { dump, load } from 'js-yaml';
-import ProductEntity from 'src/entities/product_entity';
+import ProductEntity from '../entities/product_entity';
 
 type ProductType = {
   id: number;
@@ -22,7 +22,10 @@ type ProductYamlType = {
 
 @Injectable()
 export class ProductRepository {
-  private readonly filePath = path.resolve(__dirname, '../../lib/product.yml');
+  private readonly filePath = path.resolve(
+    __dirname,
+    process.env.PRODUCT_YAML_PATH ?? '../../lib/product.yml',
+  );
 
   async read() {
     const file = await fs.readFile(this.filePath, 'utf8');
